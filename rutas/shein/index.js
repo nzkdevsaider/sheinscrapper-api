@@ -5,7 +5,19 @@ const cheerio = require("cheerio");
 
 // Funciones
 
+/* 
+API Error Codes
+
+e101 - Item doesn't exist/cannot match this item.
+e105 - URL isn't from Shein.
+e107 - Cannot retrieve data. (Temporaly disable)
+
+*/
 async function getItem(url) {
+  let urlRegex = /(https?:\/\/(.+?\.)?shein\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/g;
+
+  if(!url || !url.match(urlRegex)) return { code: "e105", message: "Invalid URL." }
+
   const html = await cloudscraper.post(
     "https://try.playwright.tech/service/control/run",
     {
@@ -21,6 +33,9 @@ async function getItem(url) {
       }),
     }
   );
+  
+  if(!html) return { code: "e107", message: "Server error." }
+  
   const parsed = JSON.parse(html).output;
   const $ = cheerio.load(parsed);
 
@@ -34,6 +49,8 @@ async function getItem(url) {
   ).attr("src");
   let product_sku = $(".product-intro__head-sku").text();
   product_sku = product_sku.replace("SKU: ", "");
+
+  if(!product_name || !product_price) return { code: "e101", message: "Item not found." }
 
   return {
     generalInfo: {

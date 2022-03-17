@@ -17,8 +17,13 @@ Autor: Sebastián Morales (@nzkdevsaider)
 
 ```json
 {
-    "name": "Nombre del producto",
-    "price": "Precio del producto",
+    generalInfo: {
+      name: product_name,
+      price: product_price,
+      image: product_image,
+      sku: product_sku,
+      url,
+    },
 }
 ```
 
