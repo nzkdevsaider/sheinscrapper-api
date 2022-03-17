@@ -15,7 +15,7 @@ Autor: Sebastián Morales (@nzkdevsaider)
 
 **Retorna:** 
 
-```json
+```js
 {
     generalInfo: {
       name: product_name,
